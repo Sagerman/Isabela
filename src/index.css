@@ -1,10 +1,75 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.css';
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poppins:wght@400;500;600;700;800;900&display=swap');
 
-ReactDOM.createRoot(document.getElementById('app')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-background: 40 30% 96%;
+    --color-foreground: 25 30% 25%;
+    --color-primary: 40 30% 96%;
+    --color-primary-foreground: 25 30% 25%;
+    --color-secondary: 345 78% 85%;
+    --color-secondary-foreground: 25 30% 25%;
+    --color-tertiary: 23 80% 82%;
+    --color-tertiary-foreground: 25 30% 25%;
+    --color-neutral: 34 45% 88%;
+    --color-neutral-foreground: 25 15% 30%;
+    --color-success: 142 40% 45%;
+    --color-success-foreground: 0 0% 100%;
+    --color-warning: 34 100% 45%;
+    --color-warning-foreground: 0 0% 100%;
+    --color-muted: 34 45% 88%;
+    --color-muted-foreground: 25 15% 30%;
+    --color-accent: 345 78% 85%;
+    --color-accent-foreground: 25 30% 25%;
+    --color-destructive: 0 70% 50%;
+    --color-destructive-foreground: 0 0% 100%;
+    --color-card: 34 45% 88%;
+    --color-card-foreground: 25 30% 25%;
+    --color-popover: 40 30% 96%;
+    --color-popover-foreground: 25 30% 25%;
+    --color-border: 36 15% 87%;
+    --color-input: 36 15% 87%;
+    --color-ring: 25 30% 35%;
+    --radius: 12px;
+    --font-sans: "Nunito Sans", sans-serif;
+    --font-headline: "Poppins", sans-serif;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body {
+    @apply bg-background text-foreground font-sans;
+    scroll-behavior: smooth;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-headline text-foreground;
+  }
+
+  p,
+  span,
+  div,
+  a,
+  li,
+  label,
+  button {
+    @apply text-foreground;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
