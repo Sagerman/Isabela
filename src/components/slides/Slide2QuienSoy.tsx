@@ -87,6 +87,40 @@ export const Slide2QuienSoy = () => {
         </motion.div>
       </motion.div>
 
+      {/* NUEVA FOTO - Avión */}
+      <motion.div
+        className="absolute bottom-16 right-16 z-20"
+        initial={{ opacity: 0, scale: 0.5, rotate: -12 }}
+        animate={{ opacity: 1, scale: 1, rotate: -5 }}
+        transition={{ delay: 2.5, duration: 1, ease: 'backOut' }}
+      >
+        <motion.div
+          className="relative"
+          animate={{
+            rotate: [-5, -3, -5],
+            y: [0, -8, 0],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        >
+          <img
+            src="https://c.animaapp.com/mhckzzyfNrTaXP/img/image.png"
+            alt="Isabela en el avión"
+            className="w-36 h-36 md:w-44 md:h-44 object-cover rounded-2xl shadow-2xl border-4 border-white"
+            style={{
+              transform: 'rotate(-5deg)',
+            }}
+          />
+          {/* Decoración de esquina - Avión emoji */}
+          <div className="absolute -top-2 -left-2 w-8 h-8 bg-primary rounded-full shadow-lg flex items-center justify-center">
+            <span className="text-2xl">✈️</span>
+          </div>
+        </motion.div>
+      </motion.div>
+
       {/* Content */}
       <div className="relative z-10 max-w-3xl w-full">
         <InteractiveTitle
@@ -112,7 +146,7 @@ export const Slide2QuienSoy = () => {
       {[...Array(5)].map((_, i) => (
         <motion.div
           key={`sparkle-${i}`}
-          className="absolute"
+          className="absolute z-5"
           style={{
             left: `${20 + i * 15}%`,
             top: `${30 + i * 10}%`,
