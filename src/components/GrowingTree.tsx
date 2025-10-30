@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 export const GrowingTree = () => {
   return (
-    <div className="fixed bottom-0 left-8 z-10 pointer-events-none">
+    <div className="fixed bottom-0 left-24 z-10 pointer-events-none">
       {/* Contenedor principal del árbol */}
       <div className="relative flex flex-col items-center">
         {/* Tronco del árbol - PRIMERO (z-index más bajo) */}

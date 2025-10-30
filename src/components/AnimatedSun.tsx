@@ -81,9 +81,7 @@ export const AnimatedSun = () => {
           {[...Array(16)].map((_, i) => {
             const angle = (i * 360) / 16;
             const radian = (angle * Math.PI) / 180;
-            const distance = 70; // Distancia desde el centro
-            const rayX = Math.cos(radian) * distance;
-            const rayY = Math.sin(radian) * distance;
+            const distance = 65; // Distancia desde el centro del sol
 
             return (
               <motion.div
@@ -92,7 +90,7 @@ export const AnimatedSun = () => {
                 style={{
                   left: '50%',
                   top: '50%',
-                  transform: `translate(-50%, -50%) translate(${rayX}px, ${rayY}px) rotate(${angle + 90}deg)`,
+                  transformOrigin: 'center',
                 }}
                 animate={{
                   scale: [1, 1.3, 1],
@@ -106,12 +104,17 @@ export const AnimatedSun = () => {
                 }}
               >
                 <div
-                  className="bg-gradient-to-t from-yellow-400 via-yellow-300 to-yellow-200"
                   style={{
-                    width: '10px',
-                    height: '45px',
-                    borderRadius: '50% 50% 40% 40%',
-                    boxShadow: '0 0 8px rgba(255, 200, 0, 0.4)',
+                    position: 'absolute',
+                    left: '50%',
+                    top: '50%',
+                    width: '8px',
+                    height: '35px',
+                    background: 'linear-gradient(to top, rgba(255, 193, 7, 0.9), rgba(255, 235, 59, 0.7))',
+                    borderRadius: '50% 50% 30% 30%',
+                    boxShadow: '0 0 10px rgba(255, 200, 0, 0.5)',
+                    transform: `translate(-50%, -50%) translateY(-${distance}px) rotate(${angle}deg)`,
+                    transformOrigin: `center ${distance}px`,
                   }}
                 />
               </motion.div>
