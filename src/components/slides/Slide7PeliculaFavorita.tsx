@@ -1,47 +1,98 @@
-import { useState } from 'react';
+// --- Volvemos a importar 'useRef' y 'useEffect' ---
+import { useState, useRef, useEffect } from 'react';
 import { InteractiveTitle } from '@/components/InteractiveTitle';
 import { AnimatedParagraph } from '@/components/AnimatedParagraph';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+// import { Input } from '@/components/ui/input'; // Eliminado
+// import { Button } from '@/components/ui/button'; // Eliminado
 import { motion } from 'framer-motion';
-import { PencilIcon, CheckIcon } from 'lucide-react';
+// --- Volvemos a importar 'PlayIcon' ---
+import { PlayIcon } from 'lucide-react';
+
+// Importamos el VIDEO local
+import videoFondo from '../../assets/pelicula.mp4';
 
 export const Slide7PeliculaFavorita = () => {
-  const [pelicula, setPelicula] = useState('Enredados');
-  const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState('');
+  const pelicula = 'Enredados';
 
-  const handleEdit = () => {
-    setIsEditing(true);
-    setEditValue(pelicula);
-  };
+  // --- Volvemos a añadir el estado para controlar el vídeo ---
+  const [playVideo, setPlayVideo] = useState(false);
 
-  const handleSave = () => {
-    if (editValue.trim()) {
-      setPelicula(editValue.trim());
-      setIsEditing(false);
-      setEditValue('');
+  // --- Volvemos a añadir la referencia a la etiqueta <video> ---
+  const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // La URL de la imagen de póster
+  const posterUrl = "https://i.ytimg.com/vi/fZSZMp32XaA/maxresdefault.jpg";
+
+  // --- Volvemos a añadir el useEffect para reproducir el video CON SONIDO ---
+  useEffect(() => {
+    // Si 'playVideo' es true Y el video ya existe en el DOM...
+    if (playVideo && videoRef.current) {
+      // Llama a la función .play()
+      // Como esto ocurre después de un clic del usuario, el navegador PERMITE el sonido.
+      videoRef.current.play().catch(error => {
+        console.error("Error al intentar reproducir el video:", error);
+      });
     }
+  }, [playVideo]); // Esta función se ejecuta cada vez que el estado 'playVideo' cambia
+
+  // Función para iniciar el vídeo al hacer clic
+  const handlePlayVideo = () => {
+    setPlayVideo(true);
   };
 
   return (
     <div className="relative w-full h-full flex items-center justify-center px-8 md:px-16 lg:px-32 overflow-hidden">
-      {/* GIF de Enredados como fondo */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="https://i.pinimg.com/originals/ff/c7/da/ffc7dab0adefaffdfd2e7d2b7b85e1b2.gif"
-          alt="Enredados - Rapunzel y Flynn Rider"
-          // --- CAMBIO 1: GIF A MÁXIMA VISIBILIDAD (eliminada 'opacity-70') ---
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
-        {/* --- CAMBIO 2: OVERLAY ELIMINADO --- */}
-        {/* <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/0 to-background/10" /> */}
+      
+      {/* --- Volvemos a la LÓGICA DEL FONDO DE VÍDEO CON BOTÓN --- */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        
+        {/* Si 'playVideo' es true, muestra la etiqueta <video> */}
+        {playVideo ? (
+          <video
+            ref={videoRef} // Conectamos la referencia
+            src={videoFondo} // Usamos el video importado
+            loop // Para que se repita
+            muted={false} // ¡CON SONIDO!
+            playsInline // Importante para que funcione en iOS
+            className="absolute inset-0 w-full h-full object-cover"
+            title="Video de fondo - Enredados"
+          >
+            Tu navegador no soporta videos HTML5.
+          </video>
+        ) : (
+          // Si 'playVideo' es false, muestra el póster y el botón de Play
+          <div 
+            className="absolute inset-0 z-10 flex flex-col items-center justify-center cursor-pointer transition-opacity duration-500"
+            onClick={handlePlayVideo}
+          >
+            {/* Imagen de póster de fondo */}
+            <img
+              src={posterUrl}
+              alt="Póster de Enredados"
+              className="absolute inset-0 w-full h-full object-cover -z-10 opacity-70"
+            />
+            {/* Overlay oscuro para que el botón resalte */}
+            <div className="absolute inset-0 bg-black/40 -z-10"></div>
+            
+            {/* Botón de Play gigante */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0.7 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ repeat: Infinity, duration: 1, repeatType: 'reverse', ease: 'easeInOut' }}
+            >
+              <PlayIcon className="w-24 h-24 md:w-32 md:h-32 text-white/80" strokeWidth={1.5} />
+            </motion.div>
+            <p className="text-white/90 text-xl md:text-2xl mt-4 font-semibold [text-shadow:_0_1px_4px_rgb(0_0_0_/_0.5)]">
+              Reproducir con sonido
+            </p>
+          </div>
+        )}
       </div>
+      {/* --- FIN DEL CAMBIO DE LÓGICA DE VÍDEO --- */}
 
-      {/* Textura adicional sutil (la dejamos, es parte del diseño) */}
-      <div className="absolute inset-0 z-1">
+
+      {/* Textura adicional sutil */}
+      <div className="absolute inset-0 z-1 pointer-events-none">
         <img
           src="https://c.animaapp.com/mhbwykrcWWxvya/img/ai_4.png"
           alt="floating bubbles background"
@@ -62,7 +113,6 @@ export const Slide7PeliculaFavorita = () => {
           ease: 'easeInOut',
         }}
       >
-        {/* --- CAMBIO 3 (Opcional): Sombra para legibilidad del emoji --- */}
         <div className="text-8xl [text-shadow:_0_2px_4px_rgb(0_0_0_/_0.5)]">🎬</div>
         <motion.div
           className="absolute top-1/2 left-full w-96 h-2 bg-gradient-to-r from-yellow-300/50 to-transparent"
@@ -112,7 +162,6 @@ export const Slide7PeliculaFavorita = () => {
         {[...Array(5)].map((_, i) => (
           <motion.span
             key={i}
-            // --- CAMBIO 3 (Opcional): Sombra para legibilidad de estrellas ---
             className="text-4xl [text-shadow:_0_2px_4px_rgb(0_0_0_/_0.5)]"
             animate={{
               scale: [1, 1.3, 1],
@@ -136,14 +185,12 @@ export const Slide7PeliculaFavorita = () => {
         <InteractiveTitle
           text="Mi Película Favorita"
           as="h2"
-          // --- CAMBIO 3: AÑADIDA SOMBRA DE TEXTO PARA LEGIBILIDAD ---
           className="text-4xl md:text-6xl lg:text-7xl mb-16 text-center text-foreground [text-shadow:_0_2px_8px_rgb(0_0_0_/_0.7)]"
         />
 
         <AnimatedParagraph delay={1.2}>
           <div className="relative z-10">
             <motion.div
-              // --- CAMBIO 3 (Opcional): Sombra para legibilidad del emoji ---
               className="text-8xl text-center mb-8 [text-shadow:_0_2px_4px_rgb(0_0_0_/_0.5)]"
               animate={{
                 scale: [1, 1.1, 1],
@@ -157,45 +204,16 @@ export const Slide7PeliculaFavorita = () => {
               🎥
             </motion.div>
 
-            {isEditing ? (
-              <div className="space-y-6">
-                <Input
-                  type="text"
-                  value={editValue}
-                  onChange={(e) => setEditValue(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-                  placeholder="Nombre de la Película"
-                  className="bg-background text-foreground border-border text-center text-xl py-6"
-                  autoFocus
-                />
-                <Button
-                  onClick={handleSave}
-                  className="w-full bg-success text-success-foreground hover:bg-success/90 font-normal text-xl py-6"
-                >
-                  <CheckIcon className="w-6 h-6 mr-2" strokeWidth={2} />
-                  Guardar
-                </Button>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                <motion.p
-                  // --- CAMBIO 3: AÑADIDA SOMBRA DE TEXTO PARA LEGIBILIDAD ---
-                  className="text-3xl md:text-4xl text-foreground text-center font-headline font-bold [text-shadow:_0_2px_8px_rgb(0_0_0_/_0.7)]"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', duration: 0.8 }}
-                >
-                  {pelicula}
-                </motion.p>
-                <Button
-                  onClick={handleEdit}
-                  className="w-full bg-tertiary text-tertiary-foreground hover:bg-tertiary/90 font-normal text-xl py-6"
-                >
-                  <PencilIcon className="w-6 h-6 mr-2" strokeWidth={2} />
-                  Cambiar
-                </Button>
-              </div>
-            )}
+            <div className="space-y-6">
+              <motion.p
+                className="text-3xl md:text-4xl text-foreground text-center font-headline font-bold [text-shadow:_0_2px_8px_rgb(0_0_0_/_0.7)]"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', duration: 0.8 }}
+              >
+                {pelicula}
+              </motion.p>
+            </div>
           </div>
         </AnimatedParagraph>
       </div>

@@ -33,33 +33,43 @@ export const InteractiveTitle = ({ text, className = '', as = 'h1' }: Interactiv
     },
   };
 
+  // --- ¡ARREGLO MAYOR AQUÍ! ---
+  // Dividimos el texto en palabras y luego en letras dentro de cada palabra
+  const words = text.split(' ');
+
   return (
     <Component
-      className={`font-headline font-bold text-foreground whitespace-nowrap ${className}`}
+      className={`font-headline font-bold text-foreground ${className}`}
       variants={container}
       initial="hidden"
       animate="visible"
     >
-      {text.split('').map((char, index) => (
-        <motion.span
-          key={`${char}-${index}`}
-          variants={child}
-          onMouseEnter={() => setHoveredIndex(index)}
-          onMouseLeave={() => setHoveredIndex(null)}
-          className="inline-block cursor-pointer"
-          animate={{
-            scale: hoveredIndex === index ? 1.5 : 1,
-            color: hoveredIndex === index ? 'hsl(340, 100%, 50%)' : 'hsl(340, 60%, 30%)',
-            rotate: hoveredIndex === index ? [0, -10, 10, -10, 0] : 0,
-            y: hoveredIndex === index ? -10 : 0,
-          }}
-          transition={{
-            duration: 0.3,
-            ease: 'easeOut',
-          }}
-        >
-          {char === ' ' ? '\u00A0' : char}
-        </motion.span>
+      {words.map((word, wordIndex) => (
+        <span key={`word-${wordIndex}`} className="inline-block"> {/* Contenedor para cada palabra */}
+          {word.split('').map((char, charIndex) => (
+            <motion.span
+              key={`${wordIndex}-${charIndex}`}
+              variants={child}
+              onMouseEnter={() => setHoveredIndex(wordIndex * 100 + charIndex)} // ID único para cada letra
+              onMouseLeave={() => setHoveredIndex(null)}
+              className="inline-block cursor-pointer"
+              animate={{
+                scale: hoveredIndex === (wordIndex * 100 + charIndex) ? 1.5 : 1,
+                color: hoveredIndex === (wordIndex * 100 + charIndex) ? 'hsl(340, 100%, 50%)' : 'hsl(340, 60%, 30%)',
+                rotate: hoveredIndex === (wordIndex * 100 + charIndex) ? [0, -10, 10, -10, 0] : 0,
+                y: hoveredIndex === (wordIndex * 100 + charIndex) ? -10 : 0,
+              }}
+              transition={{
+                duration: 0.3,
+                ease: 'easeOut',
+              }}
+            >
+              {char}
+            </motion.span>
+          ))}
+          {/* Añadir un espacio entre palabras si no es la última */}
+          {wordIndex < words.length - 1 && '\u00A0'}
+        </span>
       ))}
     </Component>
   );

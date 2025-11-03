@@ -53,11 +53,16 @@ export const Slide3Cualidades = () => {
 
       {/* Content */}
       <div className="relative z-10 max-w-3xl w-full">
-        <InteractiveTitle
-          text="¿Cuáles son las cualidades de Isabela?"
-          as="h2"
-          className="text-2xl md:text-4xl lg:text-5xl mb-12 text-center text-foreground px-4"
-        />
+        
+        {/* Este div padre se asegura de que el InteractiveTitle se centre */}
+        <div className="w-full text-center mb-12"> {/* Añadí mb-12 para el margen inferior */}
+          <InteractiveTitle
+            text="¿Cuáles son las cualidades de Isabela?"
+            as="h2"
+            // Ahora 'text-center' en el padre es suficiente, no necesitas más aquí
+            className="text-2xl md:text-4xl lg:text-5xl text-foreground px-4 inline-block" // Añadí inline-block por si acaso
+          />
+        </div>
 
         <AnimatedParagraph delay={1.2}>
           <Card className="bg-card text-card-foreground p-8 md:p-12 rounded-lg shadow-lg">

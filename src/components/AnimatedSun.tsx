@@ -45,10 +45,51 @@ export const AnimatedSun = () => {
         className="fixed top-16 z-40 pointer-events-none"
         style={{ left: sunPosition }}
       >
-        <div className="relative w-40 h-40 flex items-center justify-center">
-          {/* Círculo del sol */}
+        {/* --- CAMBIO: Nuevo contenedor para centrar todo el sol (círculo + rayos) --- */}
+        {/* Usamos un tamaño fijo para este contenedor y flex para centrar */}
+        <div className="relative w-[130px] h-[130px] flex items-center justify-center">
+          
+          {/* Rayos del sol (primero, para que queden detrás del sol) */}
+          {[...Array(16)].map((_, i) => {
+            const angle = (i * 360) / 16;
+            const distance = 55; // Distancia desde el centro del sol (ajustado para el nuevo tamaño)
+
+            return (
+              <motion.div
+                key={i}
+                className="absolute"
+                // No necesitamos zIndex aquí si se renderiza primero
+                animate={{
+                  scale: [1, 1.3, 1],
+                  opacity: [0.8, 1, 0.8],
+                }}
+                transition={{
+                  duration: 2 + (i % 3) * 0.3,
+                  repeat: Infinity,
+                  delay: i * 0.08,
+                  ease: 'easeInOut',
+                }}
+              >
+                <div
+                  style={{
+                    position: 'absolute',
+                    width: '8px',
+                    height: '35px',
+                    background: 'linear-gradient(to top, rgba(255, 193, 7, 0.9), rgba(255, 235, 59, 0.7))',
+                    borderRadius: '50% 50% 30% 30%',
+                    boxShadow: '0 0 10px rgba(255, 200, 0, 0.5)',
+                    // --- CAMBIO: transform ligeramente ajustado ---
+                    transform: `rotate(${angle}deg) translateY(-${distance}px) translateX(-50%)`,
+                  }}
+                />
+              </motion.div>
+            );
+          })}
+
+          {/* Círculo del sol (segundo, para que quede encima de los rayos) */}
           <motion.div
             className="absolute"
+            // Ahora este está centrado por el flex del padre y no necesita zIndex extra si se renderiza último
             animate={{
               scale: [1, 1.05, 1],
               rotate: [0, 360],
@@ -69,61 +110,18 @@ export const AnimatedSun = () => {
             <div
               className="rounded-full"
               style={{
-                width: '100px',
+                width: '100px', // El tamaño del sol es el mismo
                 height: '100px',
                 background: 'radial-gradient(circle at 30% 30%, #FFF59D, #FFD54F 40%, #FFA726 70%, #FF9800)',
                 boxShadow: '0 0 40px rgba(255, 193, 7, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.3)',
               }}
             />
           </motion.div>
-
-          {/* Rayos del sol - correctamente posicionados alrededor */}
-          {[...Array(16)].map((_, i) => {
-            const angle = (i * 360) / 16;
-            const radian = (angle * Math.PI) / 180;
-            const distance = 65; // Distancia desde el centro del sol
-
-            return (
-              <motion.div
-                key={i}
-                className="absolute"
-                style={{
-                  left: '50%',
-                  top: '50%',
-                  transformOrigin: 'center',
-                }}
-                animate={{
-                  scale: [1, 1.3, 1],
-                  opacity: [0.8, 1, 0.8],
-                }}
-                transition={{
-                  duration: 2 + (i % 3) * 0.3,
-                  repeat: Infinity,
-                  delay: i * 0.08,
-                  ease: 'easeInOut',
-                }}
-              >
-                <div
-                  style={{
-                    position: 'absolute',
-                    left: '50%',
-                    top: '50%',
-                    width: '8px',
-                    height: '35px',
-                    background: 'linear-gradient(to top, rgba(255, 193, 7, 0.9), rgba(255, 235, 59, 0.7))',
-                    borderRadius: '50% 50% 30% 30%',
-                    boxShadow: '0 0 10px rgba(255, 200, 0, 0.5)',
-                    transform: `translate(-50%, -50%) translateY(-${distance}px) rotate(${angle}deg)`,
-                    transformOrigin: `center ${distance}px`,
-                  }}
-                />
-              </motion.div>
-            );
-          })}
         </div>
+        {/* --- FIN CAMBIO --- */}
       </motion.div>
 
-      {/* Nube perseguidora */}
+      {/* Nube perseguidora (sin cambios) */}
       {showCloud && (
         <motion.div
           className="fixed top-12 z-35 pointer-events-none"
