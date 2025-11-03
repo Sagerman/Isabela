@@ -19,3 +19,4 @@ export const AnimatedParagraph = ({ children, className = '', delay = 1 }: Anima
     </motion.div>
   );
 };
+ 

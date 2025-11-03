@@ -10,7 +10,7 @@ interface SlideStore {
 
 export const useSlideStore = create<SlideStore>((set) => ({
   currentSlide: 0,
-  totalSlides: 4,
+  totalSlides: 10,
   setCurrentSlide: (slide) => set({ currentSlide: slide }),
   nextSlide: () =>
     set((state) => ({
