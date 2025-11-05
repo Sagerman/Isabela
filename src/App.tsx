@@ -16,8 +16,22 @@ import { Slide8Mision } from '@/components/slides/Slide8Mision';
 import { Slide9Vision } from '@/components/slides/Slide9Vision';
 import { Slide10Metas } from '@/components/slides/Slide10Metas';
 
+// Importar todas las transiciones
+import {
+  zoomInTransition,
+  perspectiveFlipTransition,
+  swirlExpandTransition,
+  cubeRotateTransition,
+  fadeSlideUpTransition,
+  recordSpinTransition,
+  cinematicRevealTransition,
+  gentleFadeScaleTransition,
+  flyInBounceTransition,
+  explodeAssembleTransition,
+} from '@/lib/slideTransitions';
+
 function App() {
-  const currentSlide = useSlideStore((state) => state.currentSlide);
+  const { currentSlide, transitionDirection, nextSlide, previousSlide } = useSlideStore();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -26,15 +40,15 @@ function App() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') {
-        useSlideStore.getState().nextSlide();
+        nextSlide();
       } else if (e.key === 'ArrowLeft') {
-        useSlideStore.getState().previousSlide();
+        previousSlide();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [nextSlide, previousSlide]);
 
   const slides = [
     <Slide1Hero />,
@@ -49,12 +63,32 @@ function App() {
     <Slide10Metas />,
   ];
 
+  // Mapear cada diapositiva a una transición específica
+  const slideTransitions = [
+    zoomInTransition,
+    perspectiveFlipTransition,
+    swirlExpandTransition,
+    cubeRotateTransition,
+    fadeSlideUpTransition,
+    recordSpinTransition,
+    cinematicRevealTransition,
+    gentleFadeScaleTransition,
+    flyInBounceTransition,
+    explodeAssembleTransition,
+  ];
+
   return (
     <div className="relative w-full h-screen overflow-hidden bg-background">
       <FloatingDecorations />
       
       {slides.map((slide, index) => (
-        <SlideWrapper key={index} isActive={currentSlide === index} slideIndex={index}>
+        <SlideWrapper
+          key={index}
+          isActive={currentSlide === index}
+          slideIndex={index}
+          direction={transitionDirection}
+          customVariants={slideTransitions[index]} // Pasar la variante específica
+        >
           {slide}
         </SlideWrapper>
       ))}
