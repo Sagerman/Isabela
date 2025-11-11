@@ -1,259 +1,274 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { InteractiveTitle } from '@/components/InteractiveTitle';
+import { AnimatedParagraph } from '@/components/AnimatedParagraph';
+// --- CAMBIO: Eliminamos el árbol viejo ---
+// import { GrowingTree } from '@/components/GrowingTree';
+import { Card } from '@/components/ui/card';
+import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
 
-export const GrowingTree = () => {
+// --- CAMBIO: Importamos tus nuevos GIFs ---
+import fondoAnimado from '../../assets/slide2-fondo.gif';
+import arbolAnimado from '../../assets/arbol-slide2.gif';
+
+interface DraggableImage {
+  id: number;
+  src: string;
+  alt: string;
+  emoji: string;
+  initialPosition: { top: string; left?: string; right?: string; bottom?: string };
+  rotation: number;
+}
+
+// (La lógica de 'images', 'Slide2QuienSoy', 'handleDragEnd', etc. sigue igual...)
+const images: DraggableImage[] = [
+  {
+    id: 1,
+    src: 'https://c.animaapp.com/mhbwykrcWWxvya/img/imagen-de-whatsapp-2025-10-28-a-las-21-45-30_c9847b47.jpg',
+    alt: 'Isabela',
+    emoji: '✨',
+    initialPosition: { top: '12%', right: '12%' },
+    rotation: -8,
+  },
+  {
+    id: 2,
+    src: 'https://c.animaapp.com/mhbwykrcWWxvya/img/imagen-de-whatsapp-2025-10-28-a-las-21-45-31_378219c7.jpg',
+    alt: 'Isabela',
+    emoji: '💖',
+    initialPosition: { top: '32%', left: '5%' },
+    rotation: 10,
+  },
+  {
+    id: 3,
+    src: 'https://c.animaapp.com/mhckzzyfNrTaXP/img/image.png',
+    alt: 'Isabela en el avión',
+    emoji: '✈️',
+    initialPosition: { bottom: '16%', right: '16%' },
+    rotation: -5,
+  },
+];
+
+export const Slide2QuienSoy = () => {
+  const [insertedImage, setInsertedImage] = useState<DraggableImage | null>(null);
+  const [draggedImageId, setDraggedImageId] = useState<number | null>(null);
+
+  const handleDragEnd = (imageData: DraggableImage, event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const cardElement = document.getElementById('text-card');
+    if (!cardElement) return;
+
+    const cardRect = cardElement.getBoundingClientRect();
+    const imageX = info.point.x;
+    const imageY = info.point.y;
+
+    // Verificar si la imagen está sobre el cuadro de texto
+    const isOverCard =
+      imageX >= cardRect.left &&
+      imageX <= cardRect.right &&
+      imageY >= cardRect.top &&
+      imageY <= cardRect.bottom;
+
+    if (isOverCard) {
+      setInsertedImage(imageData);
+    }
+
+    setDraggedImageId(null);
+  };
+
+  const handleRemoveImage = () => {
+    setInsertedImage(null);
+  };
+
   return (
-    <div className="fixed bottom-0 left-24 z-10 pointer-events-none">
-      {/* Contenedor principal del árbol */}
-      <div className="relative flex flex-col items-center">
-        {/* Tronco del árbol - PRIMERO (z-index más bajo) */}
-        <motion.div
-          className="relative z-10"
-          initial={{ scaleY: 0 }}
-          animate={{ scaleY: 1 }}
-          transition={{
-            duration: 3,
-            ease: 'easeOut',
-          }}
-          style={{
-            transformOrigin: 'bottom',
-            position: 'absolute',
-            bottom: 0,
-          }}
-        >
-          {/* Tronco principal */}
-          <div
-            className="relative"
-            style={{
-              width: '40px',
-              height: '200px',
-              background: 'linear-gradient(to right, #8B4513, #A0522D)',
-              borderRadius: '20px 20px 0 0',
-              boxShadow: 'inset -5px 0 10px rgba(0,0,0,0.3)',
-            }}
-          >
-            {/* Textura del tronco */}
-            <div className="absolute top-1/4 left-1/2 w-3 h-8 bg-black opacity-20 rounded-full transform -translate-x-1/2" />
-            <div className="absolute top-1/2 left-1/4 w-2 h-6 bg-black opacity-20 rounded-full" />
-            <div className="absolute top-2/3 right-1/4 w-2 h-5 bg-black opacity-20 rounded-full" />
-          </div>
+    <div className="relative w-full h-full flex items-center justify-center px-8 md:px-16 lg:px-32">
+      {/* --- CAMBIO: Árbol que crece REEMPLAZADO por tu GIF --- */}
+      {/* <GrowingTree /> */}
+      <motion.img
+        src={arbolAnimado} // Tu nuevo GIF
+        alt="Árbol animado"
+        className="fixed bottom-0 left-10 z-10 pointer-events-none"
+        style={{ width: '250px' }} // Puedes ajustar el tamaño aquí
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5, duration: 1.5, ease: 'easeOut' }}
+      />
+      {/* --- FIN DEL CAMBIO --- */}
 
-          {/* Raíces */}
-          <motion.div
-            className="absolute -bottom-2 left-1/2 transform -translate-x-1/2"
-            initial={{ scaleY: 0, opacity: 0 }}
-            animate={{ scaleY: 1, opacity: 1 }}
-            transition={{
-              delay: 0.5,
-              duration: 2,
-              ease: 'easeOut',
-            }}
-            style={{
-              transformOrigin: 'top',
-            }}
-          >
-            {[...Array(5)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute top-0"
-                style={{
-                  width: '8px',
-                  height: '30px',
-                  background: 'linear-gradient(to bottom, #8B4513, #654321)',
-                  borderRadius: '0 0 10px 10px',
-                  left: `${-20 + i * 10}px`,
-                  transform: `rotate(${-20 + i * 10}deg)`,
-                  transformOrigin: 'top',
-                }}
-              />
-            ))}
-          </motion.div>
-        </motion.div>
 
-        {/* Copa del árbol - SEGUNDO (z-index más alto, encima del tronco) */}
-        <motion.div
-          className="relative z-20"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{
-            delay: 2,
-            duration: 2,
-            ease: 'easeOut',
-          }}
-          style={{
-            position: 'absolute',
-            bottom: '160px', // Posicionado para que cubra la parte superior del tronco
-          }}
-        >
-          {/* Hojas en capas - todas centradas */}
+      {/* --- CAMBIO: Background Image --- */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src={fondoAnimado} // Tu nuevo GIF de fondo
+          alt="Fondo animado de paisaje"
+          className="w-full h-full object-cover" // Quitamos 'opacity-20'
+          loading="lazy"
+        />
+      </div>
+      {/* --- FIN DEL CAMBIO --- */}
+
+
+      {/* Fotos de Isabela arrastrables (sin cambios) */}
+      {images.map((image) => {
+        const isInserted = insertedImage?.id === image.id;
+        const isDragging = draggedImageId === image.id;
+
+        if (isInserted) return null;
+
+        return (
           <motion.div
-            className="relative flex flex-col items-center"
+            key={image.id}
+            className="absolute z-20 cursor-grab active:cursor-grabbing"
+            style={image.initialPosition}
+            drag
+            dragMomentum={false}
+            dragElastic={0.1}
+            onDragStart={() => setDraggedImageId(image.id)}
+            onDragEnd={(event, info) => handleDragEnd(image, event, info)}
+            initial={{ opacity: 0, scale: 0.5, rotate: image.rotation * 2 }}
             animate={{
-              rotate: [-2, 2, -2],
+              opacity: 1,
+              scale: isDragging ? 1.1 : 1,
+              rotate: isDragging ? 0 : image.rotation,
+              y: isDragging ? 0 : [0, -5, 0],
             }}
             transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          >
-            {/* Capa superior */}
-            <div
-              className="mb-[-25px]"
-              style={{
-                width: '80px',
-                height: '80px',
-                background: 'radial-gradient(circle, #90EE90, #228B22)',
-                borderRadius: '50%',
-                boxShadow: '0 4px 15px rgba(34, 139, 34, 0.4)',
-              }}
-            />
-
-            {/* Capa media */}
-            <div
-              className="mb-[-35px]"
-              style={{
-                width: '120px',
-                height: '100px',
-                background: 'radial-gradient(circle, #98FB98, #32CD32)',
-                borderRadius: '50%',
-                boxShadow: '0 4px 15px rgba(50, 205, 50, 0.4)',
-              }}
-            />
-
-            {/* Capa inferior - más grande para conectar mejor */}
-            <div
-              style={{
-                width: '160px',
-                height: '130px',
-                background: 'radial-gradient(circle, #90EE90, #228B22)',
-                borderRadius: '50%',
-                boxShadow: '0 4px 15px rgba(34, 139, 34, 0.4)',
-              }}
-            />
-          </motion.div>
-
-          {/* Frutas/Manzanas */}
-          {[...Array(6)].map((_, i) => {
-            const positions = [
-              { x: -30, y: 20 },
-              { x: 30, y: 25 },
-              { x: -45, y: 70 },
-              { x: 45, y: 75 },
-              { x: 0, y: 85 },
-              { x: -15, y: 10 },
-            ];
-
-            return (
-              <motion.div
-                key={i}
-                className="absolute"
-                style={{
-                  left: `calc(50% + ${positions[i].x}px)`,
-                  top: `${positions[i].y}px`,
-                  width: '15px',
-                  height: '15px',
-                  background: 'radial-gradient(circle at 30% 30%, #FF6B6B, #C92A2A)',
-                  borderRadius: '50%',
-                  boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
-                  transform: 'translateX(-50%)',
-                }}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{
-                  delay: 3.5 + i * 0.2,
-                  duration: 0.5,
-                  ease: 'backOut',
-                }}
-              >
-                {/* Hojita de la manzana */}
-                <div
-                  className="absolute -top-1 left-1/2 transform -translate-x-1/2"
-                  style={{
-                    width: '4px',
-                    height: '6px',
-                    background: '#228B22',
-                    borderRadius: '50% 50% 0 0',
-                  }}
-                />
-              </motion.div>
-            );
-          })}
-
-          {/* Pájaros volando alrededor */}
-          {[...Array(3)].map((_, i) => (
-            <motion.div
-              key={`bird-${i}`}
-              className="absolute"
-              style={{
-                left: '50%',
-                top: '-20px',
-                transform: 'translateX(-50%)',
-              }}
-              animate={{
-                x: [0, 60 + i * 20, 0],
-                y: [0, -30 - i * 10, 0],
-              }}
-              transition={{
-                delay: 4 + i * 0.5,
-                duration: 4 + i,
+              opacity: { delay: 1.5, duration: 1 },
+              scale: { delay: 1.5, duration: 1, ease: 'backOut' },
+              rotate: { delay: 1.5, duration: 1, ease: 'backOut' },
+              y: {
+                duration: 3,
                 repeat: Infinity,
                 ease: 'easeInOut',
-              }}
-            >
-              <svg width="20" height="15" viewBox="0 0 20 15">
-                <path
-                  d="M2 7 Q5 2, 10 7 Q15 2, 18 7"
-                  stroke="#333"
-                  strokeWidth="2"
-                  fill="none"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </motion.div>
-          ))}
-        </motion.div>
+              },
+            }}
+            whileHover={{ scale: 1.05, rotate: image.rotation + 2 }}
+          >
+            <div className="relative">
+              <img
+                src={image.src}
+                alt={image.alt}
+                className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-2xl shadow-2xl border-4 border-white pointer-events-none"
+              />
+              {/* Decoración de esquina */}
+              <div
+                className="absolute w-8 h-8 bg-secondary rounded-full shadow-lg flex items-center justify-center pointer-events-none"
+                style={{
+                  top: image.id === 2 ? 'auto' : '-0.5rem',
+                  bottom: image.id === 2 ? '-0.5rem' : 'auto',
+                  left: image.id === 3 ? '-0.5rem' : 'auto',
+                  right: image.id === 3 ? 'auto' : '-0.5rem',
+                }}
+              >
+                <span className="text-2xl">{image.emoji}</span>
+              </div>
+            </div>
+          </motion.div>
+        );
+      })}
 
-        {/* Pasto alrededor del árbol */}
+      {/* Content (sin cambios) */}
+      <div className="relative z-10 max-w-3xl w-full">
+        <InteractiveTitle
+          text="¿Quién soy?"
+          as="h2"
+          className="text-4xl md:text-6xl lg:text-7xl mb-12 text-center text-foreground"
+        />
+
+        <AnimatedParagraph delay={1.2}>
+          <Card
+            id="text-card"
+            className="bg-card/90 backdrop-blur-sm text-card-foreground p-8 md:p-12 rounded-3xl shadow-2xl border-2 border-secondary/30 min-h-[300px] flex items-center justify-center relative overflow-hidden"
+          >
+            {insertedImage ? (
+              <motion.div
+                className="relative w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
+                drag
+                dragMomentum={false}
+                dragElastic={0.1}
+                onDragEnd={(event, info) => {
+                  const cardElement = document.getElementById('text-card');
+                  if (!cardElement) return;
+
+                  const cardRect = cardElement.getBoundingClientRect();
+                  const imageX = info.point.x;
+                  const imageY = info.point.y;
+
+                  const isStillOverCard =
+                    imageX >= cardRect.left &&
+                    imageX <= cardRect.right &&
+                    imageY >= cardRect.top &&
+                    imageY <= cardRect.bottom;
+
+                  if (!isStillOverCard) {
+                    handleRemoveImage();
+                  }
+                }}
+                initial={{ scale: 0, rotate: 0 }}
+                animate={{ scale: 1, rotate: 0 }}
+                exit={{ scale: 0, rotate: 0 }}
+                transition={{ duration: 0.5, ease: 'backOut' }}
+              >
+                <img
+                  src={insertedImage.src}
+                  alt={insertedImage.alt}
+                  className="max-w-full max-h-[400px] object-contain rounded-2xl shadow-2xl border-4 border-white pointer-events-none"
+                />
+                <motion.div
+                  className="absolute -top-4 -right-4 w-12 h-12 bg-secondary rounded-full shadow-lg flex items-center justify-center pointer-events-none"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                >
+                  <span className="text-3xl">{insertedImage.emoji}</span>
+                </motion.div>
+              </motion.div>
+            ) : (
+              <motion.p
+                className="text-lg md:text-xl leading-relaxed text-foreground"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                ¡Hola a todos! Mi nombre es Isabela, tengo 16 años y mi cumpleaños es el 6 de junio.
+                <br />
+                <br />
+                Soy de Venezuela, pero crecí en la tierra del joropo, Villavicencio, y ahora vivo aquí en Granada,
+                una estudiante de décimo grado en el Colegio Luis Carlos Galán Sarmiento. Me dicen que soy una
+                persona muy amigable y también juiciosa con mis estudios. ¿Mi pasatiempo favorito? ¡Definitivamente comer!
+              </motion.p>
+            )}
+          </Card>
+        </AnimatedParagraph>
+      </div>
+
+      {/* Elementos decorativos flotantes (sin cambios) */}
+      {[...Array(5)].map((_, i) => (
         <motion.div
-          className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-30"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{
-            delay: 1,
-            duration: 1.5,
-          }}
+          key={`sparkle-${i}`}
+          className="absolute z-5 pointer-events-none"
           style={{
-            transformOrigin: 'center',
-            width: '120px',
+            left: `${20 + i * 15}%`,
+            top: `${30 + i * 10}%`,
+          }}
+          animate={{
+            scale: [0, 1, 0],
+            rotate: [0, 180, 360],
+            opacity: [0, 1, 0],
+          }}
+          transition={{
+            delay: 2 + i * 0.3,
+            duration: 2,
+            repeat: Infinity,
+            repeatDelay: 3,
           }}
         >
-          <div className="flex justify-center">
-            {[...Array(15)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="inline-block"
-                style={{
-                  width: '3px',
-                  height: `${15 + Math.random() * 10}px`,
-                  background: 'linear-gradient(to top, #228B22, #90EE90)',
-                  borderRadius: '50% 50% 0 0',
-                  marginLeft: '2px',
-                  transform: `rotate(${-10 + Math.random() * 20}deg)`,
-                }}
-                animate={{
-                  rotate: [-5, 5, -5],
-                }}
-                transition={{
-                  delay: 1.5 + i * 0.1,
-                  duration: 2 + Math.random(),
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              />
-            ))}
-          </div>
+          <span className="text-3xl">✨</span>
         </motion.div>
-      </div>
+      ))}
     </div>
   );
 };

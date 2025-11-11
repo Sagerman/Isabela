@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { InteractiveTitle } from '@/components/InteractiveTitle';
 import { AnimatedParagraph } from '@/components/AnimatedParagraph';
-import { GrowingTree } from '@/components/GrowingTree';
+// import { GrowingTree } from '@/components/GrowingTree'; // Ya no se usa
 import { Card } from '@/components/ui/card';
 import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
+
+// Importamos tus GIFs
+import fondoAnimado from '../../assets/slide2-fondo.gif';
+import arbolAnimado from '../../assets/arbol-slide2.gif';
 
 interface DraggableImage {
   id: number;
@@ -53,7 +57,6 @@ export const Slide2QuienSoy = () => {
     const imageX = info.point.x;
     const imageY = info.point.y;
 
-    // Verificar si la imagen está sobre el cuadro de texto
     const isOverCard =
       imageX >= cardRect.left &&
       imageX <= cardRect.right &&
@@ -73,20 +76,29 @@ export const Slide2QuienSoy = () => {
 
   return (
     <div className="relative w-full h-full flex items-center justify-center px-8 md:px-16 lg:px-32">
-      {/* Árbol que crece */}
-      <GrowingTree />
+      {/* Tu GIF del árbol (Movido más a la izquierda) */}
+      <motion.img
+        src={arbolAnimado}
+        alt="Árbol animado"
+        // --- ¡CAMBIO AQUÍ! Añadido 'ml-[-80px]' para moverlo más a la izquierda ---
+        className="fixed bottom-0 left-0 z-10 pointer-events-none ml-[-80px]"
+        style={{ width: '450px' }} // Mantenemos el tamaño grande
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5, duration: 1.5, ease: 'easeOut' }}
+      />
 
-      {/* Background Image */}
+      {/* Tu GIF de fondo */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://c.animaapp.com/mhbwykrcWWxvya/img/ai_3.png"
-          alt="botanical line texture"
-          className="w-full h-full object-cover opacity-20"
+          src={fondoAnimado}
+          alt="Fondo animado de paisaje"
+          className="w-full h-full object-cover"
           loading="lazy"
         />
       </div>
 
-      {/* Fotos de Isabela arrastrables */}
+      {/* Fotos de Isabela arrastrables (sin cambios) */}
       {images.map((image) => {
         const isInserted = insertedImage?.id === image.id;
         const isDragging = draggedImageId === image.id;
@@ -128,7 +140,6 @@ export const Slide2QuienSoy = () => {
                 alt={image.alt}
                 className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-2xl shadow-2xl border-4 border-white pointer-events-none"
               />
-              {/* Decoración de esquina */}
               <div
                 className="absolute w-8 h-8 bg-secondary rounded-full shadow-lg flex items-center justify-center pointer-events-none"
                 style={{
@@ -145,7 +156,7 @@ export const Slide2QuienSoy = () => {
         );
       })}
 
-      {/* Content */}
+      {/* Content (sin cambios) */}
       <div className="relative z-10 max-w-3xl w-full">
         <InteractiveTitle
           text="¿Quién soy?"
@@ -167,17 +178,14 @@ export const Slide2QuienSoy = () => {
                 onDragEnd={(event, info) => {
                   const cardElement = document.getElementById('text-card');
                   if (!cardElement) return;
-
                   const cardRect = cardElement.getBoundingClientRect();
                   const imageX = info.point.x;
                   const imageY = info.point.y;
-
                   const isStillOverCard =
                     imageX >= cardRect.left &&
                     imageX <= cardRect.right &&
                     imageY >= cardRect.top &&
                     imageY <= cardRect.bottom;
-
                   if (!isStillOverCard) {
                     handleRemoveImage();
                   }
@@ -226,7 +234,7 @@ export const Slide2QuienSoy = () => {
         </AnimatedParagraph>
       </div>
 
-      {/* Elementos decorativos flotantes */}
+      {/* Elementos decorativos flotantes (sin cambios) */}
       {[...Array(5)].map((_, i) => (
         <motion.div
           key={`sparkle-${i}`}
