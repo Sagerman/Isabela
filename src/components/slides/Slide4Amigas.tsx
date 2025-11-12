@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { InteractiveTitle } from '@/components/InteractiveTitle';
 import { AnimatedParagraph } from '@/components/AnimatedParagraph';
-import { motion } from 'framer-motion';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { PencilIcon, CheckIcon } from 'lucide-react';
+// --- ¡CAMBIO 1! Importamos 'useAnimation' ---
+import { motion, useAnimation } from 'framer-motion'; 
+
+// (Importamos el GIF de fondo)
+import fondoAnimado from '../../assets/slide4-fondo.gif';
 
 interface Friend {
   id: number;
@@ -15,19 +16,34 @@ interface Friend {
 interface FriendCardProps {
   friend: Friend;
   delay: number;
-  onEditName: (id: number, newName: string) => void;
 }
 
-const FriendCard = ({ friend, delay, onEditName }: FriendCardProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(friend.name);
+const FriendCard = ({ friend, delay }: FriendCardProps) => {
+  // --- ¡CAMBIO 2! Añadimos el control de animación ---
+  const heartControls = useAnimation();
 
-  const handleSave = () => {
-    if (editValue.trim()) {
-      onEditName(friend.id, editValue.trim());
-      setIsEditing(false);
-    }
+  // Esta función se activa con el clic
+  const handleTap = async () => {
+    // 1. Muestra el corazón, lo hace grande y lo mueve hacia arriba
+    await heartControls.start({
+      opacity: 1,
+      scale: 2.5,
+      y: -60,
+      transition: { duration: 0.4, ease: 'easeOut' },
+    });
+    // 2. Lo desvanece
+    await heartControls.start({
+      opacity: 0,
+      transition: { duration: 0.2, ease: 'easeIn' },
+    });
+    // 3. Lo resetea a su posición inicial (invisible)
+    await heartControls.start({
+      scale: 0,
+      y: 0,
+      transition: { duration: 0 },
+    });
   };
+
 
   return (
     <motion.div
@@ -40,6 +56,8 @@ const FriendCard = ({ friend, delay, onEditName }: FriendCardProps) => {
         className="relative"
         whileHover={{ scale: 1.05, rotate: 5 }}
         transition={{ duration: 0.3 }}
+        // --- ¡CAMBIO 3! Añadimos el evento 'onTap' (clic) ---
+        onTap={handleTap}
       >
         <div className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden shadow-2xl border-4 border-white relative">
           <img
@@ -50,104 +68,83 @@ const FriendCard = ({ friend, delay, onEditName }: FriendCardProps) => {
           <div className="absolute inset-0 bg-gradient-to-t from-secondary/20 to-transparent" />
         </div>
         
-        {/* Decoración de corazón */}
+        {/* Decoración de corazón (fija) */}
         <motion.div
           className="absolute -top-2 -right-2 w-12 h-12 bg-gradient-1 rounded-full shadow-lg flex items-center justify-center"
-          animate={{
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
+          animate={{ scale: [1, 1.2, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
         >
           <span className="text-2xl">💖</span>
         </motion.div>
+
+        {/* --- ¡CAMBIO 4! El corazón animado que "explota" --- */}
+        <motion.span
+          className="absolute text-6xl pointer-events-none z-50"
+          style={{
+            // Lo centramos en la imagen
+            top: '50%', 
+            left: '50%',
+            translateX: '-50%',
+            translateY: '-50%',
+          }}
+          initial={{ opacity: 0, scale: 0, y: 0 }}
+          animate={heartControls} // Lo conectamos a nuestros controles
+        >
+          💖
+        </motion.span>
+        {/* --- FIN DEL CAMBIO --- */}
+
       </motion.div>
       
+      {/* El nombre (sin cambios) */}
       <motion.div
         className="bg-card/90 backdrop-blur-sm px-8 py-4 rounded-full shadow-lg flex items-center gap-3"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: delay + 0.3 }}
       >
-        {isEditing || !friend.name ? (
-          <>
-            <Input
-              type="text"
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-              placeholder="Escribe un nombre..."
-              className="bg-background text-foreground border-border text-xl font-headline font-bold w-48"
-              autoFocus
-            />
-            <Button
-              onClick={handleSave}
-              className="bg-success text-success-foreground hover:bg-success/90 font-normal p-2 w-10 h-10"
-              aria-label="Guardar nombre"
-            >
-              <CheckIcon className="w-5 h-5" strokeWidth={2} />
-            </Button>
-          </>
-        ) : (
-          <>
-            <p className="text-2xl md:text-3xl font-headline font-bold text-foreground">
-              {friend.name}
-            </p>
-            <Button
-              onClick={() => setIsEditing(true)}
-              className="bg-tertiary text-tertiary-foreground hover:bg-tertiary/90 font-normal p-2 w-10 h-10"
-              aria-label="Editar nombre"
-            >
-              <PencilIcon className="w-5 h-5" strokeWidth={2} />
-            </Button>
-          </>
-        )}
+        <p className="text-2xl md:text-3xl font-headline font-bold text-foreground">
+          {friend.name}
+        </p>
       </motion.div>
     </motion.div>
   );
 };
 
 export const Slide4Amigas = () => {
+  // Nombres fijos (sin cambios)
   const [friends, setFriends] = useState<Friend[]>([
     { 
       id: 1,
       image: 'https://c.animaapp.com/mhby8jgcFN56I9/img/imagen-de-whatsapp-2025-10-28-a-las-21-47-16_3fb3ba22.jpg', 
-      name: '' 
+      name: 'Karen'
     },
     { 
       id: 2,
       image: 'https://c.animaapp.com/mhby8jgcFN56I9/img/imagen-de-whatsapp-2025-10-28-a-las-21-47-18_637066c2.jpg', 
-      name: '' 
+      name: 'Mafe y Karen'
     },
     { 
       id: 3,
       image: 'https://c.animaapp.com/mhby8jgcFN56I9/img/imagen-de-whatsapp-2025-10-28-a-las-21-47-19_8051916f.jpg', 
-      name: '' 
+      name: 'Luisa y Cata'
     },
   ]);
 
-  const handleEditName = (id: number, newName: string) => {
-    setFriends(friends.map(friend => 
-      friend.id === id ? { ...friend, name: newName } : friend
-    ));
-  };
-
   return (
     <div className="relative w-full h-full flex items-center justify-center px-8 md:px-16 lg:px-32">
-      {/* Background Image */}
+      
+      {/* Fondo con tu GIF (sin cambios) */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://c.animaapp.com/mhbwykrcWWxvya/img/ai_2.png"
-          alt="pastel blob background"
-          className="w-full h-full object-cover opacity-30"
+          src={fondoAnimado}
+          alt="Fondo animado de amigas"
+          className="w-full h-full object-cover"
           loading="lazy"
         />
       </div>
 
-      {/* Elementos decorativos flotantes */}
+      {/* Elementos decorativos flotantes (sin cambios) */}
       {[...Array(8)].map((_, i) => (
         <motion.div
           key={`heart-${i}`}
@@ -189,13 +186,12 @@ export const Slide4Amigas = () => {
                 key={friend.id}
                 friend={friend}
                 delay={1.4 + index * 0.2}
-                onEditName={handleEditName}
               />
             ))}
           </div>
         </AnimatedParagraph>
 
-        {/* Mensaje especial */}
+        {/* Mensaje especial (sin cambios) */}
         <motion.div
           className="mt-16 text-center"
           initial={{ opacity: 0, y: 20 }}

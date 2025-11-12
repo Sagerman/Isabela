@@ -3,18 +3,24 @@ import { AnimatedParagraph } from '@/components/AnimatedParagraph';
 import { Card } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 
+// --- ¡CAMBIO! Importamos tu nuevo GIF de fondo ---
+import fondoAnimado from '../../assets/slide8-fondo.gif';
+
 export const Slide8Mision = () => {
   return (
     <div className="relative w-full h-full flex items-center justify-center px-8 md:px-16 lg:px-32">
+      
+      {/* --- ¡CAMBIO! Fondo reemplazado por tu GIF --- */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://c.animaapp.com/mhbwykrcWWxvya/img/ai_3.png"
-          alt="botanical line texture"
-          className="w-full h-full object-cover opacity-20"
+          src={fondoAnimado} // 1. Usamos tu GIF
+          alt="Fondo animado de misión" // 2. Cambiamos el alt
+          className="w-full h-full object-cover" // 3. Quitamos 'opacity-20'
           loading="lazy"
         />
       </div>
 
+      {/* Brújula flotante (CONSERVADA) */}
       <motion.div
         className="absolute top-20 right-20 z-20"
         animate={{
@@ -44,6 +50,7 @@ export const Slide8Mision = () => {
         </div>
       </motion.div>
 
+      {/* Content */}
       <div className="relative z-10 max-w-4xl w-full">
         <InteractiveTitle
           text="Mi Misión"
@@ -52,7 +59,8 @@ export const Slide8Mision = () => {
         />
 
         <AnimatedParagraph delay={1.2}>
-          <Card className="bg-card/90 backdrop-blur-sm text-card-foreground p-10 md:p-16 rounded-3xl shadow-2xl border-2 border-secondary/30 relative overflow-hidden">
+          {/* --- ¡CAMBIO! Tarjeta estilo "vidrio esmerilado" --- */}
+          <Card className="bg-white/30 backdrop-blur-md text-gray-900 p-10 md:p-16 rounded-3xl shadow-2xl border-2 border-white/30 relative overflow-hidden">
             <motion.div
               className="absolute top-0 left-0 w-32 h-32 bg-gradient-1 opacity-20 rounded-br-full"
               animate={{
@@ -92,7 +100,8 @@ export const Slide8Mision = () => {
                 🎯
               </motion.div>
               
-              <p className="text-xl md:text-2xl leading-relaxed text-foreground text-center font-sans">
+              {/* --- ¡CAMBIO! Texto más oscuro para legibilidad --- */}
+              <p className="text-xl md:text-2xl leading-relaxed text-gray-800 text-center font-sans">
                 Ser una persona auténtica, responsable y feliz, que aprende de cada experiencia y siempre da lo mejor de sí misma para crecer y ayudar a los demás.
               </p>
             </div>
@@ -100,6 +109,7 @@ export const Slide8Mision = () => {
         </AnimatedParagraph>
       </div>
 
+      {/* Corazones flotantes (CONSERVADOS) */}
       {[...Array(5)].map((_, i) => (
         <motion.div
           key={`heart-${i}`}

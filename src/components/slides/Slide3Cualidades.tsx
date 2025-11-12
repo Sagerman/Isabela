@@ -1,156 +1,106 @@
 import { useState } from 'react';
 import { InteractiveTitle } from '@/components/InteractiveTitle';
 import { AnimatedParagraph } from '@/components/AnimatedParagraph';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { useCualidadesStore } from '@/stores/cualidadesStore';
-import { PencilIcon, Trash2Icon, CheckIcon, XIcon } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+
+// --- (Eliminamos Card, Input, Button, useCualidadesStore y todos los iconos) ---
+
+// Importamos tu nuevo GIF de fondo
+import fondoAnimado from '../../assets/slide3-fondo.gif';
+
+// --- ¡NUEVO! Aquí dividimos tu texto de WhatsApp ---
+const cualidades = [
+  {
+    id: 1,
+    frente: "Genuina y Confiable",
+    dorso: "Soy una persona genuina, con un corazón noble. Me esfuerzo por cumplir lo que prometo y tengo ganas de mejorar cada día."
+  },
+  {
+    id: 2,
+    frente: "Fuerte y Resiliente",
+    dorso: "Soy fuerte, aprendo de mis errores y confío en que puedo lograr todo lo que me proponga."
+  },
+  {
+    id: 3,
+    frente: "Empática y Sensible",
+    dorso: "Valoro los pequeños detalles que hacen la vida especial. A veces soy sensible, pero eso me hace más empática y humana."
+  }
+];
+
+// La frase final del mensaje
+const conclusion = "Poco a poco, sigo construyendo la mejor versión de mí misma.";
 
 export const Slide3Cualidades = () => {
-  const { cualidades, addCualidad, editCualidad, deleteCualidad } = useCualidadesStore();
-  const [inputValue, setInputValue] = useState('');
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editValue, setEditValue] = useState('');
+  // --- ¡NUEVO! Este estado controla qué tarjeta está volteada ---
+  const [flippedIndex, setFlippedIndex] = useState<number | null>(null);
 
-  const handleAdd = () => {
-    if (inputValue.trim()) {
-      addCualidad(inputValue.trim());
-      setInputValue('');
-    }
-  };
-
-  const handleEdit = (id: string, text: string) => {
-    setEditingId(id);
-    setEditValue(text);
-  };
-
-  const handleSaveEdit = (id: string) => {
-    if (editValue.trim()) {
-      editCualidad(id, editValue.trim());
-      setEditingId(null);
-      setEditValue('');
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setEditingId(null);
-    setEditValue('');
-  };
+  // --- (Eliminamos toda la lógica de handleAdd, handleEdit, etc.) ---
 
   return (
     <div className="relative w-full h-full flex items-center justify-center px-8 md:px-16 lg:px-32">
-      {/* Background Image */}
+      
+      {/* Fondo con tu nuevo GIF */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://c.animaapp.com/mhbwykrcWWxvya/img/ai_4.png"
-          alt="floating bubbles background"
-          className="w-full h-full object-cover opacity-20"
+          src={fondoAnimado}
+          alt="Fondo animado de cualidades"
+          className="w-full h-full object-cover"
           loading="lazy"
         />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-3xl w-full">
+      {/* --- CAMBIO: Aumentado a 'max-w-4xl' para que quepan 3 tarjetas --- */}
+      <div className="relative z-10 max-w-4xl w-full">
         
-        {/* Este div padre se asegura de que el InteractiveTitle se centre */}
-        <div className="w-full text-center mb-12"> {/* Añadí mb-12 para el margen inferior */}
+        {/* Título (sin cambios) */}
+        <div className="w-full text-center mb-12">
           <InteractiveTitle
             text="¿Cuáles son las cualidades de Isabela?"
             as="h2"
-            // Ahora 'text-center' en el padre es suficiente, no necesitas más aquí
-            className="text-2xl md:text-4xl lg:text-5xl text-foreground px-4 inline-block" // Añadí inline-block por si acaso
+            className="text-2xl md:text-4xl lg:text-5xl text-foreground px-4 inline-block"
           />
         </div>
 
         <AnimatedParagraph delay={1.2}>
-          <Card className="bg-card text-card-foreground p-8 md:p-12 rounded-lg shadow-lg">
-            {/* Input Section */}
-            <div className="flex gap-4 mb-8">
-              <Input
-                type="text"
-                placeholder="Escribe una cualidad..."
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-                className="flex-1 bg-background text-foreground border-border"
-              />
-              <Button
-                onClick={handleAdd}
-                className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-normal px-8"
+          {/* --- ¡TODO ESTO ES NUEVO! --- */}
+          {/* Un 'grid' para las 3 tarjetas, con perspectiva 3D */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 [perspective:1200px]">
+            {cualidades.map((cualidad, index) => (
+              <motion.div
+                key={cualidad.id}
+                className="relative w-full h-64 cursor-pointer"
+                // Al hacer clic, voltea esta tarjeta (o la regresa si ya estaba volteada)
+                onClick={() => setFlippedIndex(flippedIndex === index ? null : index)}
+                // Anima el 'rotateY' basado en el estado 'flippedIndex'
+                animate={{ rotateY: flippedIndex === index ? 180 : 0 }}
+                transition={{ duration: 0.6, ease: 'easeInOut' }}
+                style={{ transformStyle: 'preserve-3d' }} // Habilita el 3D
               >
-                Agregar
-              </Button>
-            </div>
-
-            {/* List Section */}
-            <div className="space-y-4">
-              <AnimatePresence>
-                {cualidades.map((cualidad) => (
-                  <motion.div
-                    key={cualidad.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, x: -100 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex items-center gap-4 p-4 bg-background rounded-lg"
-                  >
-                    {editingId === cualidad.id ? (
-                      <>
-                        <Input
-                          type="text"
-                          value={editValue}
-                          onChange={(e) => setEditValue(e.target.value)}
-                          onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit(cualidad.id)}
-                          className="flex-1 bg-card text-foreground border-border"
-                          autoFocus
-                        />
-                        <Button
-                          onClick={() => handleSaveEdit(cualidad.id)}
-                          className="bg-success text-success-foreground hover:bg-success/90 font-normal p-2 w-10 h-10"
-                          aria-label="Guardar"
-                        >
-                          <CheckIcon className="w-5 h-5" strokeWidth={2} />
-                        </Button>
-                        <Button
-                          onClick={handleCancelEdit}
-                          className="bg-muted text-muted-foreground hover:bg-muted/90 font-normal p-2 w-10 h-10"
-                          aria-label="Cancelar"
-                        >
-                          <XIcon className="w-5 h-5" strokeWidth={2} />
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <p className="flex-1 text-foreground text-lg">{cualidad.text}</p>
-                        <Button
-                          onClick={() => handleEdit(cualidad.id, cualidad.text)}
-                          className="bg-tertiary text-tertiary-foreground hover:bg-tertiary/90 font-normal p-2 w-10 h-10"
-                          aria-label="Editar"
-                        >
-                          <PencilIcon className="w-5 h-5" strokeWidth={2} />
-                        </Button>
-                        <Button
-                          onClick={() => deleteCualidad(cualidad.id)}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-normal p-2 w-10 h-10"
-                          aria-label="Eliminar"
-                        >
-                          <Trash2Icon className="w-5 h-5" strokeWidth={2} />
-                        </Button>
-                      </>
-                    )}
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-
-              {cualidades.length === 0 && (
-                <p className="text-center text-muted-foreground text-lg py-8">
-                  No hay cualidades agregadas aún. ¡Agrega la primera!
-                </p>
-              )}
-            </div>
-          </Card>
+                {/* CARA FRONTAL de la tarjeta */}
+                <div
+                  className="absolute inset-0 w-full h-full bg-blue-50/50 backdrop-blur-md text-gray-900 p-6 rounded-lg shadow-lg border border-white/30 flex items-center justify-center text-center"
+                  style={{ backfaceVisibility: 'hidden' }} // Oculta esta cara cuando está de espaldas
+                >
+                  <h3 className="text-2xl font-bold">{cualidad.frente}</h3>
+                </div>
+                
+                {/* CARA TRASERA de la tarjeta */}
+                <div
+                  className="absolute inset-0 w-full h-full bg-blue-100/90 backdrop-blur-md text-gray-900 p-6 rounded-lg shadow-lg border border-white/30 flex items-center justify-center text-center"
+                  style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }} // La pone de espaldas
+                >
+                  <p className="text-base font-medium">{cualidad.dorso}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          
+          {/* Frase de conclusión */}
+          <p className="text-center text-xl text-foreground font-semibold mt-12 [text-shadow:_0_1px_4px_rgb(0_0_0_/_0.3)]">
+            {conclusion}
+          </p>
+          {/* --- FIN DE LA SECCIÓN NUEVA --- */}
         </AnimatedParagraph>
       </div>
     </div>

@@ -80,9 +80,8 @@ export const Slide2QuienSoy = () => {
       <motion.img
         src={arbolAnimado}
         alt="Árbol animado"
-        // --- ¡CAMBIO AQUÍ! Añadido 'ml-[-80px]' para moverlo más a la izquierda ---
         className="fixed bottom-0 left-0 z-10 pointer-events-none ml-[-80px]"
-        style={{ width: '450px' }} // Mantenemos el tamaño grande
+        style={{ width: '450px' }} 
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.5, duration: 1.5, ease: 'easeOut' }}
@@ -215,6 +214,7 @@ export const Slide2QuienSoy = () => {
                 </motion.div>
               </motion.div>
             ) : (
+              // --- ¡TEXTO MEJORADO AQUÍ! ---
               <motion.p
                 className="text-lg md:text-xl leading-relaxed text-foreground"
                 initial={{ opacity: 0 }}
@@ -225,9 +225,10 @@ export const Slide2QuienSoy = () => {
                 ¡Hola a todos! Mi nombre es Isabela, tengo 16 años y mi cumpleaños es el 6 de junio.
                 <br />
                 <br />
-                Soy de Venezuela, pero crecí en la tierra del joropo, Villavicencio, y ahora vivo aquí en Granada,
-                una estudiante de décimo grado en el Colegio Luis Carlos Galán Sarmiento. Me dicen que soy una
-                persona muy amigable y también juiciosa con mis estudios. ¿Mi pasatiempo favorito? ¡Definitivamente comer!
+                Nací en Venezuela, pero me crié en Villavicencio y actualmente vivo aquí en Granada. Soy estudiante de secundaria en el Colegio Luis Carlos Galán Sarmiento.
+                <br />
+                <br />
+                Me considero una persona abiertamente honesta y sincera; también soy muy amable, empática y amorosa. En mis pasatiempos, ¡me encanta salir a comer, pasar tiempo con mis amigas y, por supuesto, dormir!
               </motion.p>
             )}
           </Card>

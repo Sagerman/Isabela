@@ -7,6 +7,9 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PlusIcon, Trash2Icon } from 'lucide-react';
 
+// --- ¡CAMBIO! Importamos tu nuevo GIF de fondo ---
+import fondoAnimado from '../../assets/slide10-fondo.gif';
+
 interface Meta {
   id: string;
   text: string;
@@ -51,15 +54,18 @@ export const Slide10Metas = () => {
 
   return (
     <div className="relative w-full h-full flex items-center justify-center px-8 md:px-16 lg:px-32 py-16">
+      
+      {/* --- ¡CAMBIO! Fondo reemplazado por tu GIF --- */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://c.animaapp.com/mhbwykrcWWxvya/img/ai_2.png"
-          alt="pastel blob background"
-          className="w-full h-full object-cover opacity-30"
+          src={fondoAnimado} // 1. Usamos tu GIF
+          alt="Fondo animado de metas" // 2. Cambiamos el alt
+          className="w-full h-full object-cover" // 3. Quitamos 'opacity-30'
           loading="lazy"
         />
       </div>
 
+      {/* Cohete flotante (CONSERVADO) */}
       <motion.div
         className="absolute bottom-10 right-10 z-20"
         animate={{
@@ -75,6 +81,7 @@ export const Slide10Metas = () => {
         <div className="text-7xl">🚀</div>
       </motion.div>
 
+      {/* Contenido principal */}
       <div className="relative z-10 max-w-7xl w-full">
         <InteractiveTitle
           text="Mis Metas"
@@ -89,10 +96,11 @@ export const Slide10Metas = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 1.2, duration: 0.8 }}
             >
-              <Card className="bg-card/90 backdrop-blur-sm text-card-foreground p-8 rounded-3xl shadow-xl border-2 border-secondary/30 h-full">
+              {/* --- ¡CAMBIO DE ESTÉTICA! Tarjeta de vidrio oscuro --- */}
+              <Card className="bg-black/20 backdrop-blur-sm text-white p-8 rounded-3xl shadow-xl border-2 border-white/30 h-full">
                 <div className="flex items-center justify-center gap-3 mb-6">
                   <span className="text-4xl">⏱️</span>
-                  <h3 className="text-2xl md:text-3xl font-headline font-bold text-foreground">
+                  <h3 className="text-2xl md:text-3xl font-headline font-bold text-white">
                     A Corto Plazo
                   </h3>
                 </div>
@@ -106,10 +114,11 @@ export const Slide10Metas = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 20 }}
                         transition={{ duration: 0.3 }}
-                        className="flex items-start gap-3 p-4 bg-background rounded-xl group"
+                        // --- ¡CAMBIO DE ESTÉTICA! Fila más transparente ---
+                        className="flex items-start gap-3 p-4 bg-black/20 rounded-xl group"
                       >
                         <span className="text-2xl mt-1">✓</span>
-                        <p className="flex-1 text-foreground text-lg">{meta.text}</p>
+                        <p className="flex-1 text-white text-lg">{meta.text}</p>
                         <Button
                           onClick={() => handleDeleteCorto(meta.id)}
                           className="opacity-0 group-hover:opacity-100 transition-opacity bg-destructive text-destructive-foreground hover:bg-destructive/90 font-normal p-2 w-8 h-8"
@@ -129,7 +138,8 @@ export const Slide10Metas = () => {
                     value={inputCorto}
                     onChange={(e) => setInputCorto(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddCorto()}
-                    className="flex-1 bg-background text-foreground border-border"
+                    // --- ¡CAMBIO DE ESTÉTICA! Input transparente ---
+                    className="flex-1 bg-white/20 text-white border-white/30 placeholder:text-gray-300 rounded-md"
                   />
                   <Button
                     onClick={handleAddCorto}
@@ -146,10 +156,11 @@ export const Slide10Metas = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 1.4, duration: 0.8 }}
             >
-              <Card className="bg-card/90 backdrop-blur-sm text-card-foreground p-8 rounded-3xl shadow-xl border-2 border-tertiary/30 h-full">
+              {/* --- ¡CAMBIO DE ESTÉTICA! Tarjeta de vidrio oscuro --- */}
+              <Card className="bg-black/20 backdrop-blur-sm text-white p-8 rounded-3xl shadow-xl border-2 border-white/30 h-full">
                 <div className="flex items-center justify-center gap-3 mb-6">
                   <span className="text-4xl">🎯</span>
-                  <h3 className="text-2xl md:text-3xl font-headline font-bold text-foreground">
+                  <h3 className="text-2xl md:text-3xl font-headline font-bold text-white">
                     A Largo Plazo
                   </h3>
                 </div>
@@ -163,10 +174,11 @@ export const Slide10Metas = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
                         transition={{ duration: 0.3 }}
-                        className="flex items-start gap-3 p-4 bg-background rounded-xl group"
+                        // --- ¡CAMBIO DE ESTÉTICA! Fila más transparente ---
+                        className="flex items-start gap-3 p-4 bg-black/20 rounded-xl group"
                       >
                         <span className="text-2xl mt-1">★</span>
-                        <p className="flex-1 text-foreground text-lg">{meta.text}</p>
+                        <p className="flex-1 text-white text-lg">{meta.text}</p>
                         <Button
                           onClick={() => handleDeleteLargo(meta.id)}
                           className="opacity-0 group-hover:opacity-100 transition-opacity bg-destructive text-destructive-foreground hover:bg-destructive/90 font-normal p-2 w-8 h-8"
@@ -186,7 +198,8 @@ export const Slide10Metas = () => {
                     value={inputLargo}
                     onChange={(e) => setInputLargo(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddLargo()}
-                    className="flex-1 bg-background text-foreground border-border"
+                    // --- ¡CAMBIO DE ESTÉTICA! Input transparente ---
+                    className="flex-1 bg-white/20 text-white border-white/30 placeholder:text-gray-300 rounded-md"
                   />
                   <Button
                     onClick={handleAddLargo}
@@ -201,6 +214,7 @@ export const Slide10Metas = () => {
         </AnimatedParagraph>
       </div>
 
+      {/* Trofeos/estrellas flotantes (CONSERVADOS) */}
       {[...Array(6)].map((_, i) => (
         <motion.div
           key={`trophy-${i}`}

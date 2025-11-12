@@ -3,18 +3,24 @@ import { AnimatedParagraph } from '@/components/AnimatedParagraph';
 import { Card } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 
+// Importamos tu nuevo GIF de fondo
+import fondoAnimado from '../../assets/slide9-fondo.gif';
+
 export const Slide9Vision = () => {
   return (
     <div className="relative w-full h-full flex items-center justify-center px-8 md:px-16 lg:px-32">
+      
+      {/* Fondo con tu GIF */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://c.animaapp.com/mhbwykrcWWxvya/img/ai_4.png"
-          alt="floating bubbles background"
-          className="w-full h-full object-cover opacity-20"
+          src={fondoAnimado}
+          alt="Fondo animado de visión"
+          className="w-full h-full object-cover"
           loading="lazy"
         />
       </div>
 
+      {/* Telescopio flotante (CONSERVADO) */}
       <motion.div
         className="absolute top-16 left-16 z-20"
         animate={{
@@ -30,6 +36,7 @@ export const Slide9Vision = () => {
         <div className="text-7xl">🔭</div>
       </motion.div>
 
+      {/* Destellos flotantes (CONSERVADOS) */}
       {[...Array(8)].map((_, i) => (
         <motion.div
           key={`sparkle-${i}`}
@@ -54,6 +61,7 @@ export const Slide9Vision = () => {
         </motion.div>
       ))}
 
+      {/* Contenido principal */}
       <div className="relative z-10 max-w-4xl w-full">
         <InteractiveTitle
           text="Mi Visión"
@@ -62,7 +70,11 @@ export const Slide9Vision = () => {
         />
 
         <AnimatedParagraph delay={1.2}>
-          <Card className="bg-card/90 backdrop-blur-sm text-card-foreground p-10 md:p-16 rounded-3xl shadow-2xl border-2 border-secondary/30 relative overflow-hidden">
+          {/* --- ¡CAMBIO DE ESTÉTICA AQUÍ! --- */}
+          {/* 1. Cambiado a 'bg-black/10' (¡Súper transparente!) */}
+          {/* 2. Cambiado a 'backdrop-blur-sm' (Menos desenfoque) */}
+          <Card className="bg-black/10 backdrop-blur-sm text-white p-10 md:p-16 rounded-3xl shadow-2xl border-2 border-white/30 relative overflow-hidden">
+            {/* Rayos de luz (CONSERVADOS) */}
             {[...Array(4)].map((_, i) => (
               <motion.div
                 key={`ray-${i}`}
@@ -89,6 +101,7 @@ export const Slide9Vision = () => {
             ))}
 
             <div className="relative z-10">
+              {/* Estrella central (CONSERVADA) */}
               <motion.div
                 className="text-6xl text-center mb-8"
                 animate={{
@@ -104,14 +117,16 @@ export const Slide9Vision = () => {
                 🌟
               </motion.div>
               
-              <p className="text-xl md:text-2xl leading-relaxed text-foreground text-center font-sans">
-                Convertirme en una profesional que impacte positivamente a mi comunidad, construyendo un futuro donde pueda aplicar mi creatividad y conocimientos, sin dejar de aprender y explorar el mundo.
+              {/* Texto de la visión (CONSERVADO) */}
+              <p className="text-xl md:text-2xl leading-relaxed text-white text-center font-sans [text-shadow:_0_1px_2px_rgb(0_0_0_/_0.5)]">
+                Mi visión es convertirme en una persona realizada, feliz y segura de lo que soy, viviendo una vida equilibrada donde logre mis metas personales y profesionales, y dejando una huella positiva en quienes me rodean.
               </p>
             </div>
           </Card>
         </AnimatedParagraph>
       </div>
 
+      {/* Globos flotantes (CONSERVADOS) */}
       {[...Array(4)].map((_, i) => (
         <motion.div
           key={`balloon-${i}`}
